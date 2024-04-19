@@ -1,13 +1,17 @@
 import { TouchableOpacity, Text } from 'react-native';
 import { styled } from 'nativewind';
 
-function ButtonStyled({ ...rest }) {
+interface ButtonProps {
+  title: string;
+}
+
+function ButtonStyled({ title, ...props }: ButtonProps) {
   return (
     <TouchableOpacity
       className="h-14 bg-green-400 rounded-md items-center justify-center"
-      {...rest}
+      {...props}
     >
-      <Text className="text-white font-bold text-xl">Entrar</Text>
+      <Text className="text-white font-bold text-xl">{title}</Text>
     </TouchableOpacity>
   );
 }
