@@ -29,7 +29,7 @@ export function Home() {
           <Text className="font-bold underline">Registre-se</Text>
         </Text>
       </View>
-      <Button className="w-full mt-8 bg-violet-400" title="Login" />
+      {/* <Button className="w-full mt-8 bg-violet-400" title="Login" /> */}
     </View>
   );
 }
