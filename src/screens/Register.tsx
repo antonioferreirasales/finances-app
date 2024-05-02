@@ -5,6 +5,9 @@ import { Button } from '../components/Button';
 import { useState } from 'react';
 import { user_register } from '@/api/user_api';
 import { useForm, Controller } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FormInput } from '@/components/FormInput';
 
 type FormDataProps = {
   name: string;
@@ -12,13 +15,26 @@ type FormDataProps = {
   password: string;
 };
 
+const signUpSchema = z.object({
+  name: z.string().min(3, 'O nome precisa ter no mínimo 3 caracteres'),
+  email: z.string().email('Email inválido').min(1, 'Insira um e-mail'),
+  password: z.string().min(6, 'A senha precisa ter no mínimo 6 caracteres'),
+});
+
 export function Register() {
   const [registered, setRegistered] = useState(false);
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormDataProps>();
+  } = useForm<FormDataProps>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+    },
+  });
 
   function handleRegister({ name, email, password }: FormDataProps) {
     user_register({
@@ -39,35 +55,30 @@ export function Register() {
       />
       <Text className="text-white text-2xl font-bold my-4">Niffler</Text>
       <View className="w-full">
-        <Text className="text-white text-sm">Nome</Text>
         <Controller
           control={control}
           name="name"
-          rules={{
-            required: 'Informe o nome',
-          }}
           render={({ field: { onChange, value } }) => (
-            <TextInput
-              className="w-full h-14 mb-3 border-white border-2 rounded-md text-white px-4 focus:border-green-500"
-              textContentType="name"
-              onChangeText={onChange}
+            <FormInput
+              label="Nome"
+              changeHandler={onChange}
+              contentType="name"
               value={value}
+              errorMessage={errors.name?.message}
             />
           )}
         />
-        <Text className="text-white">{errors.name?.message}</Text>
 
-        <Text className="text-white text-sm">Email</Text>
         <Controller
           control={control}
           name="email"
           render={({ field: { onChange, value } }) => (
-            <TextInput
-              className="w-full h-14 mb-3 border-white border-2 rounded-md text-white px-4 focus:border-green-500"
-              inputMode="email"
-              textContentType="emailAddress"
-              onChangeText={onChange}
+            <FormInput
+              label="Email"
+              changeHandler={onChange}
               value={value}
+              errorMessage={errors.email?.message}
+              contentType="emailAddress"
             />
           )}
         />
@@ -87,6 +98,7 @@ export function Register() {
             />
           )}
         />
+        <Text className="text-red-500">{errors.password?.message}</Text>
 
         <Text className="mt-2 text-white text-lg">
           Já tem uma conta?{' '}
