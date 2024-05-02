@@ -1,6 +1,6 @@
 import { APIManager } from './api-manager';
 
-interface UserData {
+export interface UserData {
   name: String;
   email: String;
   password: String;

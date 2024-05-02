@@ -4,20 +4,29 @@ import colors from 'tailwindcss/colors';
 import { Button } from '../components/Button';
 import { useState } from 'react';
 import { user_register } from '@/api/user_api';
+import { useForm, Controller } from 'react-hook-form';
+
+type FormDataProps = {
+  name: string;
+  email: string;
+  password: string;
+};
 
 export function Register() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [registered, setRegistered] = useState(false);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormDataProps>();
 
-  function handleRegister() {
+  function handleRegister({ name, email, password }: FormDataProps) {
     user_register({
       name,
       email,
       password,
     }).then((result) => {
-      result && setMessage(result.status.toString());
+      result?.status === 201 && setRegistered(true);
     });
   }
 
@@ -31,35 +40,67 @@ export function Register() {
       <Text className="text-white text-2xl font-bold my-4">Niffler</Text>
       <View className="w-full">
         <Text className="text-white text-sm">Nome</Text>
-        <TextInput
-          className="w-full h-14 mb-3 border-white border-2 rounded-md text-white px-4 focus:border-green-500"
-          textContentType="name"
-          onChangeText={(name) => setName(name)}
+        <Controller
+          control={control}
+          name="name"
+          rules={{
+            required: 'Informe o nome',
+          }}
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              className="w-full h-14 mb-3 border-white border-2 rounded-md text-white px-4 focus:border-green-500"
+              textContentType="name"
+              onChangeText={onChange}
+              value={value}
+            />
+          )}
         />
+        <Text className="text-white">{errors.name?.message}</Text>
+
         <Text className="text-white text-sm">Email</Text>
-        <TextInput
-          className="w-full h-14 mb-3 border-white border-2 rounded-md text-white px-4 focus:border-green-500"
-          inputMode="email"
-          textContentType="emailAddress"
-          onChangeText={(email) => setEmail(email)}
+        <Controller
+          control={control}
+          name="email"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              className="w-full h-14 mb-3 border-white border-2 rounded-md text-white px-4 focus:border-green-500"
+              inputMode="email"
+              textContentType="emailAddress"
+              onChangeText={onChange}
+              value={value}
+            />
+          )}
         />
+
         <Text className="text-white text-sm">Senha</Text>
-        <TextInput
-          className="w-full h-14 border-white border-2 rounded-md text-white px-4 focus:border-green-500"
-          textContentType="newPassword"
-          onChangeText={(password) => setPassword(password)}
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              className="w-full h-14 border-white border-2 rounded-md text-white px-4 focus:border-green-500"
+              textContentType="newPassword"
+              onChangeText={onChange}
+              value={value}
+              onSubmitEditing={handleSubmit(handleRegister)}
+              returnKeyType="send"
+            />
+          )}
         />
+
         <Text className="mt-2 text-white text-lg">
           Já tem uma conta?{' '}
           <Text className="font-bold underline">Faça login</Text>
         </Text>
       </View>
       <Button
-        register={handleRegister}
+        register={handleSubmit(handleRegister)}
         className="w-full mt-8 bg-violet-400"
         title="Registrar"
       />
-      <Text className="text-red-600 text-sm">Mensagem: {message}</Text>
+      {registered && (
+        <Text className="text-green-600 text-sm">Registrado com sucesso!</Text>
+      )}
     </View>
   );
 }
