@@ -61,8 +61,8 @@ export function Register() {
           render={({ field: { onChange, value } }) => (
             <FormInput
               label="Nome"
-              changeHandler={onChange}
-              contentType="name"
+              onChangeText={onChange}
+              textContentType="name"
               value={value}
               errorMessage={errors.name?.message}
             />
@@ -75,30 +75,26 @@ export function Register() {
           render={({ field: { onChange, value } }) => (
             <FormInput
               label="Email"
-              changeHandler={onChange}
+              onChangeText={onChange}
+              textContentType="emailAddress"
               value={value}
               errorMessage={errors.email?.message}
-              contentType="emailAddress"
             />
           )}
         />
 
-        <Text className="text-white text-sm">Senha</Text>
         <Controller
           control={control}
           name="password"
           render={({ field: { onChange, value } }) => (
-            <TextInput
-              className="w-full h-14 border-white border-2 rounded-md text-white px-4 focus:border-green-500"
-              textContentType="newPassword"
+            <FormInput
+              label="Senha"
               onChangeText={onChange}
               value={value}
-              onSubmitEditing={handleSubmit(handleRegister)}
-              returnKeyType="send"
+              errorMessage={errors.password?.message}
             />
           )}
         />
-        <Text className="text-red-500">{errors.password?.message}</Text>
 
         <Text className="mt-2 text-white text-lg">
           Já tem uma conta?{' '}
