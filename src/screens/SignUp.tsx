@@ -8,6 +8,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormInput } from '@/components/FormInput';
+import { useNavigation } from '@react-navigation/native';
+import { AuthNavigatorRoutesProps } from '@/routes/auth.routes';
 
 type FormDataProps = {
   name: string;
@@ -21,7 +23,13 @@ const signUpSchema = z.object({
   password: z.string().min(6, 'A senha precisa ter no mínimo 6 caracteres'),
 });
 
-export function Register() {
+export function SignUp() {
+  const navigation = useNavigation<AuthNavigatorRoutesProps>();
+
+  function handleLogin() {
+    navigation.navigate('signIn');
+  }
+
   const [registered, setRegistered] = useState(false);
   const {
     control,
@@ -92,13 +100,16 @@ export function Register() {
               onChangeText={onChange}
               value={value}
               errorMessage={errors.password?.message}
+              secureTextEntry
             />
           )}
         />
 
         <Text className="mt-2 text-white text-lg">
           Já tem uma conta?{' '}
-          <Text className="font-bold underline">Faça login</Text>
+          <Text className="font-bold underline" onPress={handleLogin}>
+            Faça login
+          </Text>
         </Text>
       </View>
       <Button

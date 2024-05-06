@@ -1,5 +1,6 @@
 import { Text, TextInput, TextInputProps } from 'react-native';
 import { styled } from 'nativewind';
+import { clsx } from 'clsx';
 
 interface FormInputProps extends TextInputProps {
   label: string;
@@ -11,14 +12,18 @@ function FormInputStyled({
   errorMessage = null,
   ...props
 }: FormInputProps) {
+  const isInvalid = !!errorMessage;
   return (
     <>
       <Text className="text-white text-sm">{label}</Text>
       <TextInput
-        className="w-full h-14 mb-3 border-white border-2 rounded-md text-white px-4 focus:border-green-500"
+        className={clsx(
+          '(w-full h-14 mb-3 border-white focus:border-green-500 border-2 rounded-md px-4 text-white )',
+          { 'border-red-500 focus:border-red-500': isInvalid }
+        )}
         {...props}
       />
-      <Text className="text-red-500">{errorMessage}</Text>
+      {isInvalid && <Text className="text-red-500">{errorMessage}</Text>}
     </>
   );
 }
