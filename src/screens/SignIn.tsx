@@ -88,7 +88,7 @@ export function SignIn() {
           </Text>
         </Text>
       </View>
-      {/* <Button register={handleLogin} className="w-full mt-8 bg-violet-400" title="Login" /> */}
+      <Button onPress={handleSubmit(handleLogin)} title="Login" />
     </View>
   );
 }

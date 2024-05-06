@@ -113,7 +113,7 @@ export function SignUp() {
         </Text>
       </View>
       <Button
-        register={handleSubmit(handleRegister)}
+        onPress={handleSubmit(handleRegister)}
         className="w-full mt-8 bg-violet-400"
         title="Registrar"
       />
