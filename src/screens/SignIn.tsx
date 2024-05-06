@@ -9,6 +9,7 @@ import { FormInput } from '@/components/FormInput';
 import { useNavigation } from '@react-navigation/native';
 import { AuthNavigatorRoutesProps } from '@/routes/auth.routes';
 import { user_login } from '@/api/user_api';
+import { useState } from 'react';
 
 type FormDataProps = {
   email: string;
@@ -27,6 +28,8 @@ export function SignIn() {
     navigation.navigate('signUp');
   }
 
+  const [loggedIn, setLogin] = useState<Boolean>();
+
   const {
     control,
     handleSubmit,
@@ -41,8 +44,7 @@ export function SignIn() {
 
   function handleLogin({ email, password }: FormDataProps) {
     user_login({ email, password }).then((result) => {
-      console.log(email, password);
-      console.log(result?.data);
+      result?.status === 200 && setLogin(true);
     });
   }
 
@@ -93,6 +95,9 @@ export function SignIn() {
         </Text>
       </View>
       <Button onPress={handleSubmit(handleLogin)} title="Login" />
+      {loggedIn && (
+        <Text className="text-green-600 text-sm">Logado com sucesso!</Text>
+      )}
     </View>
   );
 }

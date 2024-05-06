@@ -28,8 +28,8 @@ export async function user_register(data: UserRegisterData) {
 
 export async function user_login(data: UserLoginData) {
   try {
-    const result = await APIManager('/users', {
-      method: 'GET',
+    const result = await APIManager('/sessions', {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
