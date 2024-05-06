@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormInput } from '@/components/FormInput';
 import { useNavigation } from '@react-navigation/native';
 import { AuthNavigatorRoutesProps } from '@/routes/auth.routes';
+import { user_login } from '@/api/user_api';
 
 type FormDataProps = {
   email: string;
@@ -39,7 +40,10 @@ export function SignIn() {
   });
 
   function handleLogin({ email, password }: FormDataProps) {
-    console.log({ email, password });
+    user_login({ email, password }).then((result) => {
+      console.log(email, password);
+      console.log(result?.data);
+    });
   }
 
   return (
