@@ -1,4 +1,4 @@
-import { View, Text, TextInput } from 'react-native';
+import { View, Text } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import colors from 'tailwindcss/colors';
 import { Button } from '../components/Button';
@@ -68,6 +68,7 @@ export function SignIn() {
               inputMode="email"
               value={value}
               errorMessage={errors.email?.message}
+              placeholder="Digite seu email"
             />
           )}
         />
@@ -83,6 +84,7 @@ export function SignIn() {
               secureTextEntry
               value={value}
               errorMessage={errors.password?.message}
+              placeholder="Digita sua senha"
             />
           )}
         />

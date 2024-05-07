@@ -1,6 +1,6 @@
-import { Text, TextInput, TextInputProps } from 'react-native';
+import { Text } from 'react-native';
 import { styled } from 'nativewind';
-import { clsx } from 'clsx';
+import { TextInput, TextInputProps } from 'react-native-paper';
 
 interface FormInputProps extends TextInputProps {
   label: string;
@@ -8,19 +8,19 @@ interface FormInputProps extends TextInputProps {
 }
 
 function FormInputStyled({
-  label,
   errorMessage = null,
+  textContentType,
   ...props
 }: FormInputProps) {
   const isInvalid = !!errorMessage;
   return (
     <>
-      <Text className="text-white text-sm">{label}</Text>
       <TextInput
-        className={clsx(
-          '(w-full h-14 mb-3 border-white focus:border-green-500 border-2 rounded-md px-4 text-white )',
-          { 'border-red-500 focus:border-red-500': isInvalid }
-        )}
+        className=" border-white focus:border-green-500 rounded-md text-white bg-black"
+        mode="outlined"
+        error={errorMessage ? true : false}
+        textColor="white"
+        autoCapitalize={textContentType === 'name' ? 'words' : 'none'}
         {...props}
       />
       {isInvalid && <Text className="text-red-500">{errorMessage}</Text>}
