@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import colors from 'tailwindcss/colors';
 import { Button } from '../components/Button';
@@ -8,8 +8,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormInput } from '@/components/FormInput';
 import { useNavigation } from '@react-navigation/native';
 import { AuthNavigatorRoutesProps } from '@/routes/auth.routes';
-import { user_login } from '@/api/user_api';
 import { useState } from 'react';
+import { api } from '@/services/api';
+import { AppError } from '@/utils/AppError';
 
 type FormDataProps = {
   email: string;
@@ -42,11 +43,23 @@ export function SignIn() {
     },
   });
 
-  function handleLogin({ email, password }: FormDataProps) {
-    user_login({ email, password }).then((result) => {
-      result?.status === 200 && setLogin(true);
-    });
+  async function handleLogin({ email, password }: FormDataProps) {
+    try {
+      const response = await api.post('/sessions', { email, password });
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível logar. Tente novamente mais tarde.';
+      title && Alert.alert(title);
+    }
   }
+
+  // function handleLogin({ email, password }: FormDataProps) {
+  //   user_login({ email, password }).then((result) => {
+  //     result?.status === 200 && setLogin(true);
+  //   });
+  // }
 
   return (
     <View className="flex-1 bg-black items-center justify-center p-8">
