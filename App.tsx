@@ -1,6 +1,7 @@
-import { Text, View, StatusBar } from 'react-native';
+import { StatusBar } from 'react-native';
 import { Routes } from '@/routes';
 import { PaperProvider } from 'react-native-paper';
+import { AuthContextProvider } from '@/contexts/AuthContext';
 
 export default function App() {
   return (
@@ -10,7 +11,9 @@ export default function App() {
         backgroundColor="transparent"
         translucent
       />
-      <Routes />
+      <AuthContextProvider>
+        <Routes />
+      </AuthContextProvider>
     </PaperProvider>
   );
 }
