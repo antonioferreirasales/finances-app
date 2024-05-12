@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 
-import { AuthContext } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 
 import { AuthRoutes } from './auth.routes';
 import { AppRoutes } from './app.routes';
@@ -11,8 +11,8 @@ export function Routes() {
   const theme = DefaultTheme;
   theme.colors.background = 'black';
 
-  const contextData = useContext(AuthContext);
-  console.log('Usuário logado ->', contextData);
+  const { user } = useAuth();
+  console.log('Usuário logado ->', user);
   return (
     <View className="flex-1 bg-black">
       <NavigationContainer theme={theme}>
