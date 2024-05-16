@@ -15,11 +15,7 @@ type AuthContextProviderProps = {
 };
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
-  const [user, setUser] = useState({
-    id: '2',
-    name: 'Carla',
-    email: 'carlas@gmail.com',
-  });
+  const [user, setUser] = useState<UserDTO>({} as UserDTO);
 
   function signIn(email: string, password: string) {}
   return (

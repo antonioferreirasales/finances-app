@@ -11,10 +11,16 @@ import { AuthNavigatorRoutesProps } from '@/routes/auth.routes';
 import { useState } from 'react';
 import { api } from '@/services/api';
 import { AppError } from '@/utils/AppError';
+import { Snackbar } from 'react-native-paper';
 
 type FormDataProps = {
   email: string;
   password: string;
+};
+
+type ToggleProps = {
+  message: string;
+  isOn: boolean;
 };
 
 const signUpSchema = z.object({
@@ -30,6 +36,17 @@ export function SignIn() {
   }
 
   const [loggedIn, setLogin] = useState<Boolean>();
+  const [toggle, setToggle] = useState<ToggleProps>({
+    message: '',
+    isOn: false,
+  });
+
+  function turnToggleOff() {
+    setToggle((prevState) => ({
+      ...prevState,
+      isOn: false,
+    }));
+  }
 
   const {
     control,
@@ -51,15 +68,9 @@ export function SignIn() {
       const title = isAppError
         ? error.message
         : 'Não foi possível logar. Tente novamente mais tarde.';
-      title && Alert.alert(title);
+      setToggle({ message: title, isOn: true });
     }
   }
-
-  // function handleLogin({ email, password }: FormDataProps) {
-  //   user_login({ email, password }).then((result) => {
-  //     result?.status === 200 && setLogin(true);
-  //   });
-  // }
 
   return (
     <View className="flex-1 bg-black items-center justify-center p-8">
@@ -113,6 +124,16 @@ export function SignIn() {
       {loggedIn && (
         <Text className="text-green-600 text-sm">Logado com sucesso!</Text>
       )}
+      <Snackbar
+        visible={toggle?.isOn}
+        onDismiss={turnToggleOff}
+        action={{
+          label: 'Ok',
+          onPress: turnToggleOff,
+        }}
+      >
+        {toggle.message}
+      </Snackbar>
     </View>
   );
 }
