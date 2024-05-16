@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 
 import { useAuth } from '@/hooks/useAuth';
@@ -11,13 +10,12 @@ export function Routes() {
   const theme = DefaultTheme;
   theme.colors.background = 'black';
 
-  const { user } = useAuth();
-  console.log('Usuário logado ->', user);
+  const { token } = useAuth();
+
   return (
     <View className="flex-1 bg-black">
       <NavigationContainer theme={theme}>
-        <AuthRoutes />
-        {/* <AppRoutes /> */}
+        {token ? <AuthRoutes /> : <AppRoutes />}
       </NavigationContainer>
     </View>
   );

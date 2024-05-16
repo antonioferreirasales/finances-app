@@ -1,10 +1,14 @@
-import { UserDTO } from '@/dtos/UserDTO';
+import { TokenDTO } from '@/dtos/TokenDTO';
 import { api } from '@/services/api';
-import { storageUserSave, storageUserGet } from '@/storage/storageUser';
+import {
+  storageAuthToken,
+  storageAuthTokenGet,
+  storageAuthTokenRemove,
+} from '@/storage/storageAuthToken';
 import { ReactNode, createContext, useEffect, useState } from 'react';
 
 export type AuthContextDataProps = {
-  user: UserDTO;
+  token: TokenDTO;
   signIn: (email: string, password: string) => Promise<void>;
 };
 
@@ -17,15 +21,18 @@ type AuthContextProviderProps = {
 };
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
-  const [user, setUser] = useState<UserDTO>({} as UserDTO);
+  const [userToken, setUserToken] = useState<TokenDTO>({} as TokenDTO);
 
   async function signIn(email: string, password: string) {
     try {
-      const { data } = await api.post('/sessions', { email, password });
-      console.log(`data => ${JSON.stringify(data)}`);
-      if (data.token) {
-        setUser(data.token);
-        storageUserSave(data.token);
+      const { token }: TokenDTO = await api.post('/sessions', {
+        email,
+        password,
+      });
+      if (token) {
+        console.log(token);
+        setUserToken({ token });
+        storageAuthToken({ token });
       }
     } catch (error) {
       throw error;
@@ -33,10 +40,19 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   }
 
   async function loadUserData() {
-    const userLogged = await storageUserGet();
+    const userLogged = await storageAuthTokenGet();
 
     if (userLogged) {
-      setUser(userLogged);
+      setUserToken(userLogged);
+    }
+  }
+
+  async function signOut() {
+    try {
+      setUserToken({} as TokenDTO);
+      await storageAuthTokenRemove();
+    } catch (error) {
+      throw error;
     }
   }
 
@@ -45,7 +61,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, signIn }}>
+    <AuthContext.Provider value={{ token: userToken, signIn }}>
       {children}
     </AuthContext.Provider>
   );

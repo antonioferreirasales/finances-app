@@ -29,7 +29,7 @@ const signUpSchema = z.object({
 });
 
 export function SignIn() {
-  const { user, signIn } = useAuth();
+  const { token: user, signIn } = useAuth();
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
   function handleNewAccount() {
