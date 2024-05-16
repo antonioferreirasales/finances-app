@@ -1,4 +1,4 @@
-import { View, Text, Alert } from 'react-native';
+import { View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import colors from 'tailwindcss/colors';
 import { Button } from '../components/Button';
@@ -9,9 +9,9 @@ import { FormInput } from '@/components/FormInput';
 import { useNavigation } from '@react-navigation/native';
 import { AuthNavigatorRoutesProps } from '@/routes/auth.routes';
 import { useState } from 'react';
-import { api } from '@/services/api';
 import { AppError } from '@/utils/AppError';
-import { Snackbar } from 'react-native-paper';
+import { Snackbar, Text } from 'react-native-paper';
+import { useAuth } from '../hooks/useAuth';
 
 type FormDataProps = {
   email: string;
@@ -29,6 +29,7 @@ const signUpSchema = z.object({
 });
 
 export function SignIn() {
+  const { user, signIn } = useAuth();
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
   function handleNewAccount() {
@@ -62,7 +63,7 @@ export function SignIn() {
 
   async function handleLogin({ email, password }: FormDataProps) {
     try {
-      const response = await api.post('/sessions', { email, password });
+      await signIn(email, password);
     } catch (error) {
       const isAppError = error instanceof AppError;
       const title = isAppError
@@ -115,7 +116,10 @@ export function SignIn() {
 
         <Text className="mt-2 text-white text-lg">
           Não está registrado?{' '}
-          <Text className="font-bold underline" onPress={handleNewAccount}>
+          <Text
+            className="font-bold text-white underline"
+            onPress={handleNewAccount}
+          >
             Registre-se
           </Text>
         </Text>
@@ -134,6 +138,7 @@ export function SignIn() {
       >
         {toggle.message}
       </Snackbar>
+      <Text className="pt-4 text-red-700 text-2xl">{JSON.stringify(user)}</Text>
     </View>
   );
 }
