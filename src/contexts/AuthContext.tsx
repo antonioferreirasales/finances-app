@@ -6,6 +6,7 @@ import {
   storageAuthTokenRemove,
 } from '@/storage/storageAuthToken';
 import { ReactNode, createContext, useEffect, useState } from 'react';
+import { extractRefreshToken } from '@/utils/extractRefreshToken';
 
 export type AuthContextDataProps = {
   token: TokenDTO;
@@ -25,21 +26,29 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
   async function signIn(email: string, password: string) {
     try {
-      const { token }: TokenDTO = await api.post('/sessions', {
+      const { data, headers } = await api.post('/sessions', {
         email,
         password,
       });
-      if (token) {
-        console.log(token);
-        setUserToken({ token });
-        storageAuthToken({ token });
+      if (data) {
+        // updates the refreshToken if there is one in the header
+        if (headers['set-cookie']) {
+          const refreshToken = extractRefreshToken(headers['set-cookie']);
+          setUserToken((prevState) => ({ ...prevState, refreshToken }));
+        }
+
+        setUserToken((prevState) => ({ ...prevState, token: data.token }));
+        storageAuthToken({
+          token: data.token,
+          refreshToken: userToken.refreshToken,
+        });
       }
     } catch (error) {
       throw error;
     }
   }
 
-  async function loadUserData() {
+  async function loadTokenData() {
     const userLogged = await storageAuthTokenGet();
 
     if (userLogged) {
@@ -56,8 +65,9 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     }
   }
 
+  // load user data at app start
   useEffect(() => {
-    loadUserData();
+    loadTokenData();
   }, []);
 
   return (

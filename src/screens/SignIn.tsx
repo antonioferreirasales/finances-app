@@ -143,6 +143,7 @@ export function SignIn() {
       >
         {toggle.message}
       </Snackbar>
+      <Text className="text-red-500">{JSON.stringify(user)}</Text>
     </View>
   );
 }
