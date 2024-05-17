@@ -7,10 +7,13 @@ import {
 } from '@/storage/storageAuthToken';
 import { ReactNode, createContext, useEffect, useState } from 'react';
 import { extractRefreshToken } from '@/utils/extractRefreshToken';
+import { UserDTO } from '@/dtos/UserDTO';
 
 export type AuthContextDataProps = {
+  userData: UserDTO;
   token: TokenDTO;
   signIn: (email: string, password: string) => Promise<void>;
+  // getUserData: () => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthContextDataProps>(
@@ -23,6 +26,7 @@ type AuthContextProviderProps = {
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [userToken, setUserToken] = useState<TokenDTO>({} as TokenDTO);
+  const [userData, setUserData] = useState<UserDTO>({} as UserDTO);
 
   async function signIn(email: string, password: string) {
     try {
@@ -65,13 +69,24 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     }
   }
 
+  async function getUserData() {
+    try {
+      const { data } = await api.get('/me');
+      console.log(data);
+      setUserData(data.user);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // load user data at app start
   useEffect(() => {
     loadTokenData();
+    getUserData();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ token: userToken, signIn }}>
+    <AuthContext.Provider value={{ userData, token: userToken, signIn }}>
       {children}
     </AuthContext.Provider>
   );
