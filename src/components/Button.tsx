@@ -1,20 +1,22 @@
-import { TouchableOpacity, Text, TouchableOpacityProps } from 'react-native';
+import { Button, ButtonProps } from 'react-native-paper';
 import { styled } from 'nativewind';
+import colors from 'tailwindcss/colors';
 
-interface ButtonProps extends TouchableOpacityProps {
-  title: string;
-}
-
-function ButtonStyled({ title, ...props }: ButtonProps) {
+function ButtonType({ ...props }: ButtonProps) {
   return (
-    <TouchableOpacity
-      className="h-14 w-full mt-8 bg-violet-400 rounded-md items-center justify-center"
+    <Button
+      className="mt-4"
+      mode="contained"
+      contentStyle={{
+        paddingHorizontal: 64,
+        paddingVertical: 8,
+        backgroundColor: colors.green[400],
+      }}
+      textColor="black"
       {...props}
-    >
-      <Text className="text-white font-bold text-xl">{title}</Text>
-    </TouchableOpacity>
+    ></Button>
   );
 }
 
-const Button = styled(ButtonStyled);
-export { Button };
+const StyledButton = styled(ButtonType);
+export { StyledButton as Button };

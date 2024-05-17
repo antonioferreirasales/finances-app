@@ -1,4 +1,4 @@
-import { View, Text, Alert } from 'react-native';
+import { View, Text } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import colors from 'tailwindcss/colors';
 import { Button } from '../components/Button';
@@ -11,6 +11,8 @@ import { useNavigation } from '@react-navigation/native';
 import { AuthNavigatorRoutesProps } from '@/routes/auth.routes';
 import { api } from '@/services/api';
 import { AppError } from '@/utils/AppError';
+import { ToggleProps } from './SignIn';
+import { Snackbar } from 'react-native-paper';
 
 type FormDataProps = {
   name: string;
@@ -31,6 +33,19 @@ export function SignUp() {
     navigation.navigate('signIn');
   }
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [toggle, setToggle] = useState<ToggleProps>({
+    message: '',
+    isOn: false,
+  });
+
+  function turnToggleOff() {
+    setToggle((prevState) => ({
+      ...prevState,
+      isOn: false,
+    }));
+  }
+
   const [registered, setRegistered] = useState(false);
   const {
     control,
@@ -47,6 +62,7 @@ export function SignUp() {
 
   async function handleRegister({ name, email, password }: FormDataProps) {
     try {
+      setIsLoading(true);
       const response = await api.post('/users', {
         name,
         email,
@@ -58,7 +74,9 @@ export function SignUp() {
       const title = isAppError
         ? error.message
         : 'Não foi possível cadastrar o usuário. Tente novamente mais tarde.';
-      title && Alert.alert(title);
+      setToggle({ message: title, isOn: true });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -120,14 +138,29 @@ export function SignUp() {
           </Text>
         </Text>
       </View>
-      <Button
-        onPress={handleSubmit(handleRegister)}
-        className="w-full mt-8 bg-violet-400"
-        title="Registrar"
-      />
-      {registered && (
-        <Text className="text-green-600 text-sm">Registrado com sucesso!</Text>
-      )}
+      <Button loading={isLoading} onPress={handleSubmit(handleRegister)}>
+        Registrar
+      </Button>
+      <Snackbar
+        visible={toggle?.isOn}
+        onDismiss={turnToggleOff}
+        action={{
+          label: 'Ok',
+          onPress: turnToggleOff,
+        }}
+        style={{ backgroundColor: colors.red[400] }}
+      >
+        {toggle.message}
+      </Snackbar>
+      <Snackbar
+        visible={registered}
+        onDismiss={() => setRegistered(false)}
+        style={{
+          backgroundColor: colors.green[400],
+        }}
+      >
+        Registrado com sucesso!
+      </Snackbar>
     </View>
   );
 }

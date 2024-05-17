@@ -18,7 +18,7 @@ type FormDataProps = {
   password: string;
 };
 
-type ToggleProps = {
+export type ToggleProps = {
   message: string;
   isOn: boolean;
 };
@@ -36,7 +36,7 @@ export function SignIn() {
     navigation.navigate('signUp');
   }
 
-  const [loggedIn, setLogin] = useState<Boolean>();
+  const [isLoading, setIsLoading] = useState(false);
   const [toggle, setToggle] = useState<ToggleProps>({
     message: '',
     isOn: false,
@@ -63,6 +63,7 @@ export function SignIn() {
 
   async function handleLogin({ email, password }: FormDataProps) {
     try {
+      setIsLoading(true);
       await signIn(email, password);
     } catch (error) {
       const isAppError = error instanceof AppError;
@@ -70,6 +71,8 @@ export function SignIn() {
         ? error.message
         : 'Não foi possível logar. Tente novamente mais tarde.';
       setToggle({ message: title, isOn: true });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -124,10 +127,9 @@ export function SignIn() {
           </Text>
         </Text>
       </View>
-      <Button onPress={handleSubmit(handleLogin)} title="Login" />
-      {loggedIn && (
-        <Text className="text-green-600 text-sm">Logado com sucesso!</Text>
-      )}
+      <Button loading={isLoading} onPress={handleSubmit(handleLogin)}>
+        Login
+      </Button>
       <Snackbar
         visible={toggle?.isOn}
         onDismiss={turnToggleOff}
@@ -135,10 +137,12 @@ export function SignIn() {
           label: 'Ok',
           onPress: turnToggleOff,
         }}
+        style={{
+          backgroundColor: colors.red[400],
+        }}
       >
         {toggle.message}
       </Snackbar>
-      <Text className="pt-4 text-red-700 text-2xl">{JSON.stringify(user)}</Text>
     </View>
   );
 }
