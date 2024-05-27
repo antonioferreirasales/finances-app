@@ -39,7 +39,7 @@ api.interceptors.response.use(
         const response = await axios.patch(
           'token/refresh',
           { baseURL },
-          { headers: { 'set-cookie': `refreshToken=${refreshToken}` } }
+          { headers: { Cookie: `refreshToken=${refreshToken}` } }
         );
         const { data, headers } = response;
         const token = data.token;
@@ -52,6 +52,7 @@ api.interceptors.response.use(
         return axios(originalRequest);
       } catch (error) {
         await storageAuthTokenRemove();
+        console.error(error);
         throw error;
       }
     }
