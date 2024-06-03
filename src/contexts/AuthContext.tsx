@@ -14,6 +14,7 @@ export type AuthContextDataProps = {
   token: TokenDTO;
   signIn: (email: string, password: string) => Promise<void>;
   // getUserData: () => Promise<void>;
+  signOut: () => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthContextDataProps>(
@@ -86,7 +87,9 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ userData, token: userToken, signIn }}>
+    <AuthContext.Provider
+      value={{ userData, token: userToken, signIn, signOut }}
+    >
       {children}
     </AuthContext.Provider>
   );

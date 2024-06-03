@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { AuthRoutes } from './auth.routes';
 import { AppRoutes } from './app.routes';
 import { View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export function Routes() {
   const theme = DefaultTheme;
@@ -13,10 +14,10 @@ export function Routes() {
   const { token } = useAuth();
 
   return (
-    <View className="flex-1 bg-black">
+    <GestureHandlerRootView className="flex-1 bg-black">
       <NavigationContainer theme={theme}>
         {token.token ? <AppRoutes /> : <AuthRoutes />}
       </NavigationContainer>
-    </View>
+    </GestureHandlerRootView>
   );
 }
