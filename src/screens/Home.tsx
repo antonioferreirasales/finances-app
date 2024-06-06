@@ -2,7 +2,6 @@ import { Button, Text } from 'react-native-paper';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { useMemo, useRef } from 'react';
 import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { BillForm } from '@/components/BillForm';
 import colors from 'tailwindcss/colors';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -23,7 +22,7 @@ export function Home() {
 
   return (
     <>
-      <SafeAreaView>
+      <View className="pt-2">
         <View className="flex-row justify-between items-center bg-green-400 p-3 border-2">
           <Text className="text-black">Seja bem vindo, {userData.name}</Text>
           <AntDesign name="logout" size={24} color="black" onPress={signOut} />
@@ -37,7 +36,7 @@ export function Home() {
           </Button>
         </View>
         <View></View>
-      </SafeAreaView>
+      </View>
       <BottomSheet
         ref={bottomSheetRef}
         enablePanDownToClose

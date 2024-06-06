@@ -4,7 +4,6 @@ import { useAuth } from '@/hooks/useAuth';
 
 import { AuthRoutes } from './auth.routes';
 import { AppRoutes } from './app.routes';
-import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export function Routes() {
