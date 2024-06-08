@@ -6,21 +6,19 @@ import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { Button, Checkbox, TextInput } from 'react-native-paper';
 import DatePicker from 'react-native-date-picker';
-import { createBill } from '@/services/http/bills';
-
+import { createBill, createBillProps } from '@/services/http/bills';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale/pt-BR';
 interface TypeFormProps {
   id: string;
 }
 
-function TypeForm({ id, ...props }: TypeFormProps) {
-  if (id === '1') {
-    function showValues() {
-      console.log(
-        `The TypeForm is ${id}, urgency value is ${urgencyValue}, the number value is ${value} and the date is ${date}`
-      );
-    }
+function TypeForm({ id }: TypeFormProps) {
+  if (id === '1' || id === '2' || id === '3' || id === '4') {
     const [urgencyValue, setUrgencyValue] = useState('');
+    const [description, setDescription] = useState('');
     const [value, setValue] = useState('');
+    const [netValue, setNetValue] = useState('');
     const [isFocus, setIsFocus] = useState(false);
     const [checked, setChecked] = useState(false);
     const [date, setDate] = useState(new Date());
@@ -32,23 +30,34 @@ function TypeForm({ id, ...props }: TypeFormProps) {
       { label: 'Alta', value: '3' },
     ];
 
+    const urgencyMap: { [key: string]: 'Baixa' | 'Média' | 'Alta' } = {
+      '1': 'Baixa',
+      '2': 'Média',
+      '3': 'Alta',
+    };
+
     function handleCreateButton() {
-      createBill({
-        billTypeID: 1,
+      const IDType = Number(id);
+      const billData: createBillProps = {
+        billTypeID: IDType,
         total_value: value,
-        urgency: 'Baixa',
-        is_active: true,
+        urgency: urgencyMap[urgencyValue],
         is_recurring: checked,
         due_date: date,
-      });
+        description: description,
+      };
+
+      if (IDType === 3) {
+        billData.net_value = netValue;
+      }
+
+      createBill(billData);
     }
 
     function renderLabel() {
       if (urgencyValue || isFocus) {
         return (
-          <Text
-            style={[styles.label, isFocus && { color: colors.purple[600] }]}
-          >
+          <Text style={[styles.label, isFocus && { color: colors.gray[500] }]}>
             Urgência
           </Text>
         );
@@ -60,6 +69,24 @@ function TypeForm({ id, ...props }: TypeFormProps) {
       <>
         <View className="px-4">
           <TextInput
+            label={'Descrição'}
+            value={description}
+            onChangeText={setDescription}
+            style={{ backgroundColor: colors.purple[300] }}
+            placeholderTextColor="white"
+            keyboardType="default"
+            autoCapitalize="sentences"
+            textColor={colors.gray[900]}
+            right={
+              <TextInput.Icon
+                icon="note-text-outline"
+                color={colors.green[900]}
+              />
+            }
+          />
+        </View>
+        <View className="px-4">
+          <TextInput
             label={'Valor'}
             value={value}
             onChangeText={setValue}
@@ -67,8 +94,27 @@ function TypeForm({ id, ...props }: TypeFormProps) {
             placeholderTextColor="white"
             keyboardType="number-pad"
             textColor={colors.gray[900]}
-            right={<TextInput.Icon icon="cash-multiple" />}
+            right={
+              <TextInput.Icon icon="cash-multiple" color={colors.green[900]} />
+            }
           />
+          {id === '3' && (
+            <TextInput
+              label={'Valor líquido'}
+              value={netValue}
+              onChangeText={setNetValue}
+              style={{ backgroundColor: colors.purple[300] }}
+              placeholderTextColor="white"
+              keyboardType="number-pad"
+              textColor={colors.gray[900]}
+              right={
+                <TextInput.Icon
+                  icon="cash-multiple"
+                  color={colors.green[800]}
+                />
+              }
+            />
+          )}
         </View>
         {/* urgency */}
         <View style={styles.container}>
@@ -88,7 +134,7 @@ function TypeForm({ id, ...props }: TypeFormProps) {
             maxHeight={300}
             labelField="label"
             valueField="value"
-            placeholder={!isFocus ? 'Selecione um tipo' : '...'}
+            placeholder={!isFocus ? 'Selecione o nível de urgência' : '...'}
             searchPlaceholder="Search..."
             value={urgencyValue}
             onFocus={() => setIsFocus(true)}
@@ -100,7 +146,7 @@ function TypeForm({ id, ...props }: TypeFormProps) {
             renderLeftIcon={() => (
               <AntDesign
                 style={styles.icon}
-                color={isFocus ? colors.green[500] : colors.gray[900]}
+                color={isFocus ? colors.gray[500] : colors.gray[900]}
                 name="warning"
                 size={20}
               />
@@ -116,7 +162,7 @@ function TypeForm({ id, ...props }: TypeFormProps) {
             />
           </View>
           <Button onPress={() => setOpen(true)}>
-            Data de vencimento: {date.toString()}
+            Data de vencimento: {format(date, 'dd/mm/yyyy', { locale: ptBR })}
           </Button>
           <DatePicker
             modal
@@ -164,7 +210,7 @@ function Form({ ...props }) {
   function renderLabel() {
     if (value || isFocus) {
       return (
-        <Text style={[styles.label, isFocus && { color: colors.green[600] }]}>
+        <Text style={[styles.label, isFocus && { color: colors.gray[500] }]}>
           Tipo de conta
         </Text>
       );
@@ -187,7 +233,7 @@ function Form({ ...props }) {
         maxHeight={300}
         labelField="label"
         valueField="value"
-        placeholder={!isFocus ? 'Selecione o nível de urgência' : '...'}
+        placeholder={!isFocus ? 'Selecione um tipo' : '...'}
         searchPlaceholder="Search..."
         value={value}
         onFocus={() => setIsFocus(true)}
@@ -199,7 +245,7 @@ function Form({ ...props }) {
         renderLeftIcon={() => (
           <AntDesign
             style={styles.icon}
-            color={isFocus ? colors.green[400] : 'black'}
+            color={isFocus ? colors.gray[500] : colors.gray[900]}
             name="form"
             size={20}
           />

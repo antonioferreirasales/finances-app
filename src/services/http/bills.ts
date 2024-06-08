@@ -1,11 +1,13 @@
 import { api } from '../api';
 
-interface createBillProps {
+export interface createBillProps {
   billTypeID: number;
+  description: string;
   is_recurring?: boolean;
   is_active?: boolean;
   urgency: 'Alta' | 'Média' | 'Baixa';
   total_value: string;
+  net_value?: string;
   due_date: Date;
 }
 
@@ -24,7 +26,6 @@ export async function createBill(billData: createBillProps) {
       urgency: urgencyMap[billData.urgency],
     };
     const { data } = await api.post('/bills', transformedData);
-    console.log(data);
   } catch (error) {
     throw error;
   }
