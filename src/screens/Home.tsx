@@ -6,6 +6,7 @@ import { BillForm } from '@/components/BillForm';
 import colors from 'tailwindcss/colors';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useAuth } from '@/hooks/useAuth';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export function Home() {
   const { userData, signOut } = useAuth();
@@ -22,7 +23,7 @@ export function Home() {
 
   return (
     <>
-      <View className="pt-2">
+      <SafeAreaView>
         <View className="flex-row justify-between items-center bg-green-400 p-3 border-2">
           <Text className="text-black">Seja bem vindo, {userData.name}</Text>
           <AntDesign name="logout" size={24} color="black" onPress={signOut} />
@@ -36,13 +37,13 @@ export function Home() {
           </Button>
         </View>
         <View></View>
-      </View>
+      </SafeAreaView>
       <BottomSheet
         ref={bottomSheetRef}
         enablePanDownToClose
-        index={1}
+        index={2}
         snapPoints={snapPoints}
-        backgroundStyle={{ backgroundColor: colors.purple[400] }}
+        backgroundStyle={{ backgroundColor: colors.purple[300] }}
         handleIndicatorStyle={{ backgroundColor: colors.green[400] }}
       >
         <BillForm />
