@@ -158,7 +158,7 @@ function TypeForm({ id, setBillTypeID }: TypeFormProps) {
                 labelField="label"
                 valueField="value"
                 placeholder={!isFocus ? 'Selecione o nível de urgência' : '...'}
-                searchPlaceholder="Search..."
+                searchPlaceholder="Buscar..."
                 value={urgencyValue}
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
@@ -268,7 +268,7 @@ function Form({ ...props }) {
         labelField="label"
         valueField="value"
         placeholder={!isFocus ? 'Selecione um tipo' : '...'}
-        searchPlaceholder="Search..."
+        searchPlaceholder="Buscar..."
         value={value}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
