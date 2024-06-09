@@ -1,5 +1,11 @@
+import { HistoryTable } from '@/components/HistoryTable';
 import { Text } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export function History() {
-  return <Text className="m-auto text-blue-600 text-lg">History</Text>;
+  return (
+    <SafeAreaView>
+      <HistoryTable />
+    </SafeAreaView>
+  );
 }
