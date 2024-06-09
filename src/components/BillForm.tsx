@@ -162,9 +162,13 @@ function TypeForm({ id }: TypeFormProps) {
             />
           </View>
           <Button onPress={() => setOpen(true)}>
-            Data de vencimento: {format(date, 'dd/mm/yyyy', { locale: ptBR })}
+            Data de vencimento: {format(date, 'dd/MM/yyyy', { locale: ptBR })}
           </Button>
           <DatePicker
+            mode="date"
+            title={'Seleciona a data de vencimento'}
+            confirmText="Confirmar"
+            cancelText="Cancelar"
             modal
             open={open}
             date={date}
