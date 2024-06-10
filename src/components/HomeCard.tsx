@@ -106,7 +106,7 @@ export function HomeCard({ handleNewBillButton }: homeCard) {
             {formatCurrency(balance.totalSaved)}
           </StyledText>
         </StyledView>
-        <StyledView className="mt-4 flex items-center justify-between">
+        <StyledView className="mt-4 flex items-center justify-center">
           <StyledView className="flex items-center space-x-2">
             <CreditCardIcon />
             <StyledText className="text-sm font-medium text-gray-900 dark:text-gray-100">

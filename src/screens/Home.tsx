@@ -42,8 +42,8 @@ export function Home() {
         enablePanDownToClose
         index={2}
         snapPoints={snapPoints}
-        backgroundStyle={{ backgroundColor: colors.purple[300] }}
-        handleIndicatorStyle={{ backgroundColor: colors.green[400] }}
+        backgroundStyle={{ backgroundColor: colors.purple[100] }}
+        handleIndicatorStyle={{ backgroundColor: colors.black }}
       >
         <BillForm />
       </BottomSheet>

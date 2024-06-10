@@ -94,7 +94,7 @@ function TypeForm({ id, setBillTypeID }: TypeFormProps) {
             label={'Descrição'}
             value={description}
             onChangeText={setDescription}
-            style={{ backgroundColor: colors.purple[300] }}
+            style={{ backgroundColor: colors.purple[100] }}
             placeholderTextColor="white"
             keyboardType="default"
             autoCapitalize="sentences"
@@ -114,7 +114,7 @@ function TypeForm({ id, setBillTypeID }: TypeFormProps) {
                 label={'Valor bruto'}
                 value={grossValue}
                 onChangeText={setGrossValue}
-                style={{ backgroundColor: colors.purple[300] }}
+                style={{ backgroundColor: colors.purple[100] }}
                 placeholderTextColor="white"
                 keyboardType="number-pad"
                 textColor={colors.gray[900]}
@@ -129,7 +129,7 @@ function TypeForm({ id, setBillTypeID }: TypeFormProps) {
                 label={'Valor líquido'}
                 value={value}
                 onChangeText={setValue}
-                style={{ backgroundColor: colors.purple[300] }}
+                style={{ backgroundColor: colors.purple[100] }}
                 placeholderTextColor="white"
                 keyboardType="number-pad"
                 textColor={colors.gray[900]}
@@ -146,7 +146,7 @@ function TypeForm({ id, setBillTypeID }: TypeFormProps) {
               label={'Valor'}
               value={value}
               onChangeText={setValue}
-              style={{ backgroundColor: colors.purple[300] }}
+              style={{ backgroundColor: colors.purple[100] }}
               placeholderTextColor="white"
               keyboardType="number-pad"
               textColor={colors.gray[900]}
@@ -167,13 +167,16 @@ function TypeForm({ id, setBillTypeID }: TypeFormProps) {
               <Dropdown
                 style={[
                   styles.dropdown,
-                  isFocus && { borderColor: colors.green[400] },
+                  isFocus && { borderColor: colors.gray[500] },
                 ]}
+                itemContainerStyle={styles.itemContainerStyle}
+                itemTextStyle={styles.itemTextStyle}
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
                 inputSearchStyle={styles.inputSearchStyle}
                 iconStyle={styles.iconStyle}
-                containerStyle={{ backgroundColor: colors.green[300] }}
+                containerStyle={styles.containerStyle}
+                activeColor={colors.black}
                 data={data}
                 search
                 maxHeight={300}
@@ -278,12 +281,15 @@ function Form({ ...props }) {
     <View style={styles.container}>
       {renderLabel()}
       <Dropdown
-        style={[styles.dropdown, isFocus && { borderColor: colors.green[200] }]}
+        style={[styles.dropdown, isFocus && { borderColor: colors.gray[900] }]}
+        itemContainerStyle={styles.itemContainerStyle}
+        itemTextStyle={styles.itemTextStyle}
+        activeColor={colors.black}
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
         iconStyle={styles.iconStyle}
-        containerStyle={{ backgroundColor: colors.green[200] }}
+        containerStyle={styles.containerStyle}
         data={data}
         search
         maxHeight={300}
@@ -301,7 +307,7 @@ function Form({ ...props }) {
         renderLeftIcon={() => (
           <AntDesign
             style={styles.icon}
-            color={isFocus ? colors.gray[500] : colors.gray[900]}
+            color={isFocus ? colors.purple[600] : colors.black}
             name="form"
             size={20}
           />
@@ -318,9 +324,18 @@ export const BillForm = styled(Form);
 
 export const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.purple[300],
+    backgroundColor: colors.purple[100],
     padding: 16,
   },
+  itemContainerStyle: {
+    backgroundColor: colors.black,
+    borderColor: 'red',
+  },
+  itemTextStyle: {
+    backgroundColor: colors.black,
+    color: colors.purple[100],
+  },
+  containerStyle: { backgroundColor: colors.black },
   dropdown: {
     height: 50,
     borderColor: 'black',
@@ -333,7 +348,7 @@ export const styles = StyleSheet.create({
   },
   label: {
     position: 'absolute',
-    backgroundColor: colors.purple[300],
+    backgroundColor: colors.purple[100],
     left: 22,
     top: 8,
     zIndex: 999,

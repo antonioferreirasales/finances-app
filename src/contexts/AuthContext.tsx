@@ -9,11 +9,19 @@ import { ReactNode, createContext, useEffect, useState } from 'react';
 import { extractRefreshToken } from '@/utils/extractRefreshToken';
 import { UserDTO } from '@/dtos/UserDTO';
 
+export interface completaUserData {
+  created_at: string;
+  email: string;
+  id: string;
+  name: string;
+  role: string;
+}
+
 export type AuthContextDataProps = {
   userData: UserDTO;
   token: TokenDTO;
   signIn: (email: string, password: string) => Promise<void>;
-  // getUserData: () => Promise<void>;
+  getUserData: () => Promise<completaUserData>;
   signOut: () => Promise<void>;
 };
 
@@ -73,8 +81,9 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   async function getUserData() {
     try {
       const { data } = await api.get('/me');
-      console.log(data);
-      setUserData(data.user);
+      const userData: completaUserData = data.user;
+      setUserData(userData);
+      return userData;
     } catch (error) {
       throw error;
     }
@@ -88,7 +97,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
   return (
     <AuthContext.Provider
-      value={{ userData, token: userToken, signIn, signOut }}
+      value={{ userData, token: userToken, signIn, signOut, getUserData }}
     >
       {children}
     </AuthContext.Provider>
