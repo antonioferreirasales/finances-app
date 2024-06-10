@@ -6,6 +6,7 @@ import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Button, DataTable } from 'react-native-paper';
 import colors, { green } from 'tailwindcss/colors';
+import { CardButton } from './CardButton';
 
 export function HistoryTable() {
   const [page, setPage] = useState<number>(0);
@@ -33,13 +34,7 @@ export function HistoryTable() {
 
   return (
     <ScrollView>
-      <Button
-        labelStyle={{ color: colors.gray[900] }}
-        style={{ backgroundColor: colors.green[400], borderRadius: 0 }}
-        onPress={fetchData}
-      >
-        Atualizar
-      </Button>
+      <CardButton title="Atualizar" onPress={fetchData} />
       <DataTable className=" bg-red-50">
         <DataTable.Header>
           <DataTable.Title>Descrição</DataTable.Title>

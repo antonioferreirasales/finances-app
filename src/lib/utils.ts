@@ -68,3 +68,8 @@ export function getPercentage(thisMonth: number, pastMonth: number) {
   const porcentagemCrescimento = ((pastMonth - thisMonth) / pastMonth) * 100;
   return porcentagemCrescimento;
 }
+
+export function capitaliseString(text: string) {
+  const capitalizedFormattedDate = text.charAt(0).toUpperCase() + text.slice(1);
+  return capitalizedFormattedDate;
+}

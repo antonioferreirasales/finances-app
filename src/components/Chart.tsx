@@ -1,23 +1,13 @@
-import { PieSchema, fetchPieChartData } from '@/services/http/bills';
+import { fetchPieChartData } from '@/services/http/bills';
 import { useEffect, useState } from 'react';
 import { View, Text, Dimensions } from 'react-native';
-import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart,
-} from 'react-native-chart-kit';
-import {
-  format,
-  getMonth,
-  isSameMonth as isSameMonthAndYear,
-  parse,
-  parseISO,
-} from 'date-fns';
+import { PieChart } from 'react-native-chart-kit';
+import { format, isSameMonth as isSameMonthAndYear, parse } from 'date-fns';
 import colors from 'tailwindcss/colors';
 import { ptBR } from 'date-fns/locale/pt-BR';
+import { Card } from './Card';
+import { capitaliseString } from '@/lib/utils';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 interface PieSchemaData {
   name: 'Cobrança' | 'Imprevisto' | 'Salário' | 'Outros';
@@ -26,44 +16,6 @@ interface PieSchemaData {
   legendFontColor: string;
   legendFontSize: number;
 }
-
-const data = [
-  {
-    name: 'Seoul',
-    population: 21500000,
-    color: 'rgba(131, 167, 234, 1)',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: 'Toronto',
-    population: 2800000,
-    color: '#F00',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: 'Beijing',
-    population: 527612,
-    color: 'red',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: 'New York',
-    population: 8538000,
-    color: '#ffffff',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: 'Moscow',
-    population: 11920000,
-    color: 'rgb(0, 0, 255)',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-];
 
 export function Chart() {
   const [pieData, setPieData] = useState<PieSchemaData[]>([]);
@@ -84,7 +36,7 @@ export function Chart() {
               ? 'rgba(74, 222, 128, 1)'
               : 'rgba(248, 113, 113, 1)';
           const labelColor =
-            item.type === 'Salário' ? colors.green[400] : colors.red[400];
+            item.type === 'Salário' ? colors.green[400] : colors.white;
           if (isSameMonth) {
             return {
               name: item.type,
@@ -104,11 +56,14 @@ export function Chart() {
     }
   }
   return (
-    <View>
+    <Card>
       <View>
-        <Text className="text-lg text-red-300 text-center">
-          Balanço do mês {format(new Date(), 'MMMM', { locale: ptBR })}
-        </Text>
+        <View className="pt-2 flex-row justify-center items-center gap-4 ">
+          <FontAwesome5 name="chart-pie" size={24} color={colors.purple[200]} />
+          <Text className="text-lg text-white text-center">
+            {capitaliseString(format(new Date(), 'MMMM', { locale: ptBR }))}
+          </Text>
+        </View>
         <PieChart
           data={pieData}
           width={screenWidth}
@@ -120,36 +75,7 @@ export function Chart() {
           center={[10, 10]}
         />
       </View>
-
-      {/* <LineChart
-        data={{
-          labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-          datasets: [
-            {
-              data: [
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-              ],
-            },
-          ],
-        }}
-        width={screenWidth} // from react-native
-        height={220}
-        yAxisLabel="R$"
-        yAxisSuffix="k"
-        yAxisInterval={1} // optional, defaults to 1
-        chartConfig={chartConfig}
-        bezier
-        style={{
-          marginVertical: 8,
-          borderRadius: 16,
-        }}
-      /> */}
-    </View>
+    </Card>
   );
 }
 

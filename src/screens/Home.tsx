@@ -26,7 +26,7 @@ export function Home() {
   return (
     <>
       <SafeAreaView>
-        <View className="flex-row justify-between items-center bg-purple-400 p-3 rounded-b-md">
+        <View className="flex-row justify-between items-center bg-white p-3 rounded-b-md">
           <Text className="text-gray-950 font-semibold">
             Seja bem vindo, {userData.name} ✋
           </Text>
