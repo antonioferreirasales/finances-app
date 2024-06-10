@@ -25,11 +25,12 @@ export function Home() {
   return (
     <>
       <SafeAreaView>
-        <View className="flex-row justify-between items-center bg-green-400 p-3 border-2">
-          <Text className="text-black">Seja bem vindo, {userData.name}</Text>
+        <View className="flex-row justify-between items-center bg-purple-400 p-3 rounded-b-md">
+          <Text className="text-gray-950 font-semibold">
+            Seja bem vindo, {userData.name} ✋
+          </Text>
           <AntDesign name="logout" size={24} color="black" onPress={signOut} />
         </View>
-        <Chart />
         <View className="items-center">
           <Text className="text-green-400 py-1">
             Clique aqui para adicionar uma conta
@@ -38,7 +39,9 @@ export function Home() {
             Adicionar
           </Button>
         </View>
-        <View></View>
+        <View>
+          <Chart />
+        </View>
       </SafeAreaView>
       <BottomSheet
         ref={bottomSheetRef}

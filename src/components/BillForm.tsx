@@ -19,7 +19,7 @@ function TypeForm({ id, setBillTypeID }: TypeFormProps) {
     const [urgencyValue, setUrgencyValue] = useState('');
     const [description, setDescription] = useState('');
     const [value, setValue] = useState('');
-    const [netValue, setNetValue] = useState('');
+    const [grossValue, setGrossValue] = useState('');
     const [isFocus, setIsFocus] = useState(false);
     const [checked, setChecked] = useState(false);
     const [date, setDate] = useState(new Date());
@@ -43,7 +43,7 @@ function TypeForm({ id, setBillTypeID }: TypeFormProps) {
       setUrgencyValue('');
       setDescription('');
       setValue('');
-      setNetValue('');
+      setGrossValue('');
       setIsFocus(false);
       setChecked(false);
       setDate(new Date());
@@ -63,9 +63,10 @@ function TypeForm({ id, setBillTypeID }: TypeFormProps) {
         };
 
         if (IDType === 3) {
-          billData.net_value = netValue;
+          billData.gross_value = grossValue;
           billData.is_recurring = true;
           billData.urgency = 'Baixa';
+          billData.due_date = new Date();
         }
 
         createBill(billData);
@@ -107,23 +108,44 @@ function TypeForm({ id, setBillTypeID }: TypeFormProps) {
           />
         </View>
         <View className="px-4">
-          <TextInput
-            label={'Valor'}
-            value={value}
-            onChangeText={setValue}
-            style={{ backgroundColor: colors.purple[300] }}
-            placeholderTextColor="white"
-            keyboardType="number-pad"
-            textColor={colors.gray[900]}
-            right={
-              <TextInput.Icon icon="cash-multiple" color={colors.green[900]} />
-            }
-          />
-          {id === '3' && (
+          {id === '3' ? (
+            <>
+              <TextInput
+                label={'Valor bruto'}
+                value={grossValue}
+                onChangeText={setGrossValue}
+                style={{ backgroundColor: colors.purple[300] }}
+                placeholderTextColor="white"
+                keyboardType="number-pad"
+                textColor={colors.gray[900]}
+                right={
+                  <TextInput.Icon
+                    icon="cash-multiple"
+                    color={colors.green[900]}
+                  />
+                }
+              />
+              <TextInput
+                label={'Valor líquido'}
+                value={value}
+                onChangeText={setValue}
+                style={{ backgroundColor: colors.purple[300] }}
+                placeholderTextColor="white"
+                keyboardType="number-pad"
+                textColor={colors.gray[900]}
+                right={
+                  <TextInput.Icon
+                    icon="cash-multiple"
+                    color={colors.green[800]}
+                  />
+                }
+              />
+            </>
+          ) : (
             <TextInput
-              label={'Valor líquido'}
-              value={netValue}
-              onChangeText={setNetValue}
+              label={'Valor'}
+              value={value}
+              onChangeText={setValue}
               style={{ backgroundColor: colors.purple[300] }}
               placeholderTextColor="white"
               keyboardType="number-pad"
@@ -131,7 +153,7 @@ function TypeForm({ id, setBillTypeID }: TypeFormProps) {
               right={
                 <TextInput.Icon
                   icon="cash-multiple"
-                  color={colors.green[800]}
+                  color={colors.green[900]}
                 />
               }
             />

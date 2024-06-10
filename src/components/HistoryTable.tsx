@@ -2,7 +2,10 @@ import { searchBills } from '@/services/http/bills';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale/pt-BR';
 import { useState, useEffect } from 'react';
+import { View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { Button, DataTable } from 'react-native-paper';
+import colors, { green } from 'tailwindcss/colors';
 
 export function HistoryTable() {
   const [page, setPage] = useState<number>(0);
@@ -29,44 +32,54 @@ export function HistoryTable() {
   }, [itemsPerPage]);
 
   return (
-    <DataTable className=" bg-red-50">
-      <DataTable.Header>
-        <DataTable.Title>Descrição</DataTable.Title>
-        <DataTable.Title>Valor</DataTable.Title>
-        <DataTable.Title>Tipo</DataTable.Title>
-        <DataTable.Title sortDirection="descending">Criado em</DataTable.Title>
-      </DataTable.Header>
+    <ScrollView>
+      <Button
+        labelStyle={{ color: colors.gray[900] }}
+        style={{ backgroundColor: colors.green[400], borderRadius: 0 }}
+        onPress={fetchData}
+      >
+        Atualizar
+      </Button>
+      <DataTable className=" bg-red-50">
+        <DataTable.Header>
+          <DataTable.Title>Descrição</DataTable.Title>
+          <DataTable.Title>Valor</DataTable.Title>
+          <DataTable.Title>Tipo</DataTable.Title>
+          <DataTable.Title sortDirection="descending">
+            Criado em
+          </DataTable.Title>
+        </DataTable.Header>
 
-      {items.slice(from, to).map((item) => {
-        const transformedData = {
-          ...item,
-          type: billTypeMap[item.type],
-        };
-        return (
-          <DataTable.Row key={item.id}>
-            <DataTable.Cell>{item.description}</DataTable.Cell>
-            <DataTable.Cell>{item.total_value}</DataTable.Cell>
-            <DataTable.Cell>{transformedData.type}</DataTable.Cell>
-            <DataTable.Cell>
-              {format(item.due_date, 'dd/MM/yyyy', { locale: ptBR })}
-            </DataTable.Cell>
-          </DataTable.Row>
-        );
-      })}
+        {items.slice(from, to).map((item) => {
+          const transformedData = {
+            ...item,
+            type: billTypeMap[item.type],
+          };
+          return (
+            <DataTable.Row key={item.id}>
+              <DataTable.Cell>{item.description}</DataTable.Cell>
+              <DataTable.Cell>{item.total_value}</DataTable.Cell>
+              <DataTable.Cell>{transformedData.type}</DataTable.Cell>
+              <DataTable.Cell>
+                {format(item.due_date, 'dd/MM/yyyy', { locale: ptBR })}
+              </DataTable.Cell>
+            </DataTable.Row>
+          );
+        })}
 
-      <DataTable.Pagination
-        page={page}
-        numberOfPages={Math.ceil(items.length / itemsPerPage)}
-        onPageChange={(page) => setPage(page)}
-        label={`${from + 1}-${to} de ${items.length}`}
-        numberOfItemsPerPageList={numberOfItemsPerPageList}
-        numberOfItemsPerPage={itemsPerPage}
-        onItemsPerPageChange={onItemsPerPageChange}
-        showFastPaginationControls
-        selectPageDropdownLabel={'Linhas por página'}
-      />
-      <Button onPress={fetchData}>Atualizar</Button>
-    </DataTable>
+        <DataTable.Pagination
+          page={page}
+          numberOfPages={Math.ceil(items.length / itemsPerPage)}
+          onPageChange={(page) => setPage(page)}
+          label={`${from + 1}-${to} de ${items.length}`}
+          numberOfItemsPerPageList={numberOfItemsPerPageList}
+          numberOfItemsPerPage={itemsPerPage}
+          onItemsPerPageChange={onItemsPerPageChange}
+          showFastPaginationControls
+          selectPageDropdownLabel={'Linhas por página'}
+        />
+      </DataTable>
+    </ScrollView>
   );
 }
 
@@ -74,7 +87,7 @@ interface BillTypeMap {
   [key: number]: 'Cobrança' | 'Imprevisto' | 'Salário' | 'Outros';
 }
 
-const billTypeMap: BillTypeMap = {
+export const billTypeMap: BillTypeMap = {
   1: 'Cobrança',
   2: 'Imprevisto',
   3: 'Salário',

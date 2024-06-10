@@ -1,3 +1,5 @@
+import { PieSchema, fetchPieChartData } from '@/services/http/bills';
+import { useEffect, useState } from 'react';
 import { View, Text, Dimensions } from 'react-native';
 import {
   LineChart,
@@ -7,7 +9,23 @@ import {
   ContributionGraph,
   StackedBarChart,
 } from 'react-native-chart-kit';
+import {
+  format,
+  getMonth,
+  isSameMonth as isSameMonthAndYear,
+  parse,
+  parseISO,
+} from 'date-fns';
 import colors from 'tailwindcss/colors';
+import { ptBR } from 'date-fns/locale/pt-BR';
+
+interface PieSchemaData {
+  name: 'Cobrança' | 'Imprevisto' | 'Salário' | 'Outros';
+  total_amount: number;
+  color: string;
+  legendFontColor: string;
+  legendFontSize: number;
+}
 
 const data = [
   {
@@ -48,22 +66,65 @@ const data = [
 ];
 
 export function Chart() {
+  const [pieData, setPieData] = useState<PieSchemaData[]>([]);
   const screenWidth = Dimensions.get('window').width;
+  useEffect(() => {
+    handleChartData();
+  }, []);
+
+  async function handleChartData() {
+    try {
+      const data = await fetchPieChartData();
+      console.log(data);
+      const newArray = data
+        .map((item) => {
+          const parsedDate = parse(item.period, 'MM/yyyy', new Date());
+          console.log(parsedDate);
+          const isSameMonth = isSameMonthAndYear(parsedDate, new Date());
+          console.log(isSameMonth);
+          const pieColor =
+            item.type === 'Salário'
+              ? 'rgba(74, 222, 128, 1)'
+              : 'rgba(248, 113, 113, 1)';
+          const labelColor =
+            item.type === 'Salário' ? colors.green[400] : colors.red[400];
+          if (isSameMonth) {
+            return {
+              name: item.type,
+              total_amount: item.total_amount,
+              color: pieColor,
+              legendFontColor: labelColor,
+              legendFontSize: 15,
+            };
+          }
+        })
+        .filter(Boolean) as PieSchemaData[];
+      if (newArray.length > 0) {
+        setPieData(newArray);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <View>
-      <PieChart
-        data={data}
-        width={screenWidth}
-        height={220}
-        chartConfig={chartConfig}
-        accessor={'population'}
-        backgroundColor={'transparent'}
-        paddingLeft={'15'}
-        center={[10, 50]}
-        absolute
-      />
-      <Text>Bezier Line Chart</Text>
-      <LineChart
+      <View>
+        <Text className="text-lg text-red-300 text-center">
+          Balanço do mês {format(new Date(), 'MMMM', { locale: ptBR })}
+        </Text>
+        <PieChart
+          data={pieData}
+          width={screenWidth}
+          height={250}
+          chartConfig={pieChartConfig}
+          accessor={'total_amount'}
+          backgroundColor={'transparent'}
+          paddingLeft={'10'}
+          center={[10, 10]}
+        />
+      </View>
+
+      {/* <LineChart
         data={{
           labels: ['January', 'February', 'March', 'April', 'May', 'June'],
           datasets: [
@@ -90,10 +151,15 @@ export function Chart() {
           marginVertical: 8,
           borderRadius: 16,
         }}
-      />
+      /> */}
     </View>
   );
 }
+
+const pieChartConfig = {
+  color: (opacity = 1) => `rgba(3, 7, 18, ${opacity})`,
+  labelColor: (opacity = 1) => `rgba(3, 7, 18, ${opacity})`,
+};
 
 const chartConfig = {
   backgroundColor: colors.purple[400],

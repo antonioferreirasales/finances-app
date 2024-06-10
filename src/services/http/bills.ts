@@ -1,3 +1,4 @@
+import { billTypeMap } from '@/components/HistoryTable';
 import { api } from '../api';
 
 export interface createBillProps {
@@ -7,7 +8,7 @@ export interface createBillProps {
   is_active?: boolean;
   urgency: 'Alta' | 'Média' | 'Baixa';
   total_value: string;
-  net_value?: string;
+  gross_value?: string;
   due_date: Date;
 }
 
@@ -24,11 +25,17 @@ export interface searchBills {
   importance: string | null;
   is_active: boolean;
   is_recurring: boolean;
-  net_value: string | null;
+  gross_value: string | null;
   pdf_url: string | null;
   receipt: string | null;
   type: 1 | 2 | 3 | 4;
   user_id: string;
+}
+
+export interface PieSchema {
+  type: 1 | 2 | 3 | 4;
+  total_amount: number;
+  month_year: string;
 }
 
 const urgencyMap: {
@@ -56,6 +63,23 @@ export async function searchBills() {
     const { data } = await api.get('/bills');
     const bill: searchBills[] = data.bills;
     return bill;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function fetchPieChartData() {
+  try {
+    const { data } = await api.get('/charts');
+    const bill: PieSchema[] = data.bills;
+    const bills = bill.map((item) => ({
+      ...item,
+      total_value: Number(item.total_amount),
+      total_amount: Number(item.total_amount),
+      period: item.month_year,
+      type: billTypeMap[item.type],
+    }));
+    return bills;
   } catch (error) {
     throw error;
   }
