@@ -1,4 +1,4 @@
-import { ProfileCard } from '@/components/ui/ProfileCard';
+import { ProfileCard } from '@/components/ProfileCard';
 import { completaUserData } from '@/contexts/AuthContext';
 import { useAuth } from '@/hooks/useAuth';
 import { useEffect, useState } from 'react';
@@ -12,7 +12,6 @@ export function Profile() {
     try {
       const data = await getUserData();
       setUserData(data);
-      console.log(data);
     } catch (error) {
       console.error(error);
     }

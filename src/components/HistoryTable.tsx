@@ -53,7 +53,10 @@ export function HistoryTable() {
           return (
             <DataTable.Row key={item.id}>
               <DataTable.Cell>{item.description}</DataTable.Cell>
-              <DataTable.Cell>{item.total_value}</DataTable.Cell>
+              <DataTable.Cell>{`R$ ${item.total_value.replace(
+                '.',
+                ','
+              )}`}</DataTable.Cell>
               <DataTable.Cell>{transformedData.type}</DataTable.Cell>
               <DataTable.Cell>
                 {format(item.due_date, 'dd/MM/yyyy', { locale: ptBR })}

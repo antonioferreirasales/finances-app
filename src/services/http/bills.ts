@@ -51,6 +51,7 @@ export async function createBill(billData: createBillProps) {
     const transformedData = {
       ...billData,
       urgency: urgencyMap[billData.urgency],
+      total_value: billData.total_value.replace(',', '.'),
     };
     await api.post('/bills', transformedData);
   } catch (error) {

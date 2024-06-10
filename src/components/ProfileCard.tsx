@@ -1,11 +1,9 @@
-import { Card, CardHeader, CardContent } from '../Card';
+import { Card, CardHeader, CardContent } from './Card';
 import { View, Text } from 'react-native';
 import { styled } from 'nativewind';
 import { Avatar } from 'react-native-paper';
-import { CardButton } from '../CardButton';
 const StyledView = styled(View);
 const StyledText = styled(Text);
-import AntDesign from '@expo/vector-icons/AntDesign';
 import { completaUserData } from '@/contexts/AuthContext';
 
 interface ProfileCardProps {

@@ -122,6 +122,7 @@ export function HomeCard({ handleNewBillButton }: homeCard) {
         title="Adicione uma nova conta"
         onPress={handleNewBillButton}
       />
+      <CardButton title="Atualizar" onPress={handleData} />
     </Card>
   );
 }
