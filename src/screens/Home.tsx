@@ -8,6 +8,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { useAuth } from '@/hooks/useAuth';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Chart } from '@/components/Chart';
+import { HomeCard } from '@/components/HomeCard';
 
 export function Home() {
   const { userData, signOut } = useAuth();
@@ -31,17 +32,10 @@ export function Home() {
           </Text>
           <AntDesign name="logout" size={24} color="black" onPress={signOut} />
         </View>
-        <View className="items-center">
-          <Text className="text-green-400 py-1">
-            Clique aqui para adicionar uma conta
-          </Text>
-          <Button mode="contained" onPress={handleOpenPress}>
-            Adicionar
-          </Button>
-        </View>
         <View>
           <Chart />
         </View>
+        <HomeCard handleNewBillButton={handleOpenPress} />
       </SafeAreaView>
       <BottomSheet
         ref={bottomSheetRef}

@@ -10,6 +10,7 @@ android/
 .expo/
 dist/
 web-build/
+eas.json
 
 # Native
 *.orig.*
@@ -33,6 +34,7 @@ yarn-error.*
 
 # local env files
 .env*.local
+.env
 
 # typescript
 *.tsbuildinfo

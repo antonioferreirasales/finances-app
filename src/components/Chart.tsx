@@ -75,13 +75,10 @@ export function Chart() {
   async function handleChartData() {
     try {
       const data = await fetchPieChartData();
-      console.log(data);
       const newArray = data
         .map((item) => {
           const parsedDate = parse(item.period, 'MM/yyyy', new Date());
-          console.log(parsedDate);
           const isSameMonth = isSameMonthAndYear(parsedDate, new Date());
-          console.log(isSameMonth);
           const pieColor =
             item.type === 'Salário'
               ? 'rgba(74, 222, 128, 1)'
